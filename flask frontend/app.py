@@ -19,10 +19,14 @@ def index():
 
 @app.route("/login", methods=("GET", "POST"))
 def login():
-    conn = db_connection()
-    # Chandra put ur login code here
-    conn.close()
-    return render_template("login.html")    # add the result of the login to render_template
+    if request.method == "POST":
+        UserID = request.form['UserID']
+        Password = request.form['Password']
+
+        # Chandra put ur login code here use db_connection to connect to MotionDetection.db
+
+
+    return render_template("login.html")    # add the result of the login to render_template ex. ("login.html", success)
 
 @app.route("/code")
 def code():
