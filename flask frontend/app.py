@@ -3,6 +3,7 @@ from flask.wrappers import Request
 # from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
 # from forms import LoginForm
 import sqlite3
+import import messagebox
 
 def db_connection():
     conn = sqlite3.connect("MotionDetection.db")
@@ -23,7 +24,22 @@ def login():
         UserID = request.form['UserID']
         Password = request.form['Password']
 
-        # Chandra put ur login code here use db_connection to connect to MotionDetection.db
+     global counter
+    db=sqlite3.connect('MotionDetection.db')
+    cursor=db.cursor()
+    cursor.execute("SELECT * FROM login where Login=? AND Password=?", (request.form['UserID'], request.form['Password'])
+    row=cursor.fetchone()
+    if row:
+        messagebox.showinfo('info', 'login successful')
+        counter=0
+    else:
+        messagebox.showinfo('info', 'login failed')
+        counter+=1
+        if counter>=3:
+            exit()
+    cursor.connection.commit()
+    db.close()
+
 
 
     return render_template("login.html")    # add the result of the login to render_template ex. ("login.html", success)
