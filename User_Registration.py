@@ -1,47 +1,52 @@
-from tkinter import Tk, Label, StringVar, Entry, Checkbutton, Button
+import tkinter
+import sqlite3
+from tkinter import messagebox
 
-root = Tk()
-def getvals():
-    print("Accepted")
+counter = 0
+def login():
+    global counter
+    db=sqlite3.connect('login.sqlite')
+    db.execute('CREATE TABLE IF NOT EXISTS login(username TEXT, password TEXT)')
+    db.execute("INSERT INTO login(username, password) VALUES('user', 'admin')")
+    cursor=db.cursor()
+    cursor.execute("SELECT * FROM login where username=? AND password=?", (userinput.get(), pass_input.get()))
+    row=cursor.fetchone()
+    if row:
+        messagebox.showinfo('info', 'login successful')
+        counter=0
+    else:
+        messagebox.showinfo('info', 'login failed')
+        counter+=1
+        if counter>=3:
+            exit()
+    cursor.connection.commit()
+    db.close()
 
-#Size of Grid
-root.geometry("500x300")
-#Heading of Page
-Label(root, text="User Registration", font="ar 15 bold").grid(row=0, column=3)
-#Fields within the form
-name = Label(root, text="Name")
-phone = Label(root, text="Phone")
-gender = Label(root, text="Gender")
-UserID = Label(root, text="UserID")
-Password = Label(root, text="Password")
+main_window=tkinter.Tk()
+main_window.title('Login Page')
+main_window.geometry('400x300')
+padd=20
+main_window['padx']=padd
+user_input=tkinter.StringVar()
+pass_input=tkinter.StringVar()
+info_label=tkinter.Label(main_window, text='Login Page')
+info_label.grid(row=0, column=0)
 
-#Sizing Field boxes
-name.grid(row=1, column=2)
-phone.grid(row=2, column=2)
-gender.grid(row=3, column=2)
-UserID.grid(row=4, column=2)
-Password.grid(row=5, column=2)
+info_user=tkinter.Label(main_window, text='Username')
+info_user.grid(row=2, column=0)
+userinput=tkinter.Entry(main_window, textvariable=user_input)
+userinput.grid(row=2, column=1)
 
-#Assigning fields to string variable for storing Data
-namevalue = StringVar
-phonevalue = StringVar
-gendervalue = StringVar
-UserIDvalue = StringVar
-Passwordvalue = StringVar
-#Creating entry fields
-nameentry = Entry(root, textvariable = namevalue)
-phoneentry = Entry(root, textvariable = phonevalue)
-genderentry = Entry(root, textvariable = gendervalue)
-UserIDentry = Entry(root, textvariable = UserIDvalue)
-Passwordentry = Entry(root, textvariable = Password)
+info_pass = tkinter.Label(main_window, text='Password')
+info_pass.grid(row=3, column=0, pady=20)
+passinput=tkinter.Entry(main_window, textvariable=pass_input, show="*")
+passinput.grid(row=3, column=1)
 
-#Sizing Entry fields
-nameentry.grid(row=1, column=3)
-phoneentry.grid(row=2, column=3)
-genderentry.grid(row=3, column=3)
-UserIDentry.grid(row=4, column=3)
-Passwordentry.grid(row=5, column=3)
-#Submit button
-Button(text= "Submit", command= getvals).grid(row=7, column=5)
+login_btn=tkinter.Button(main_window, text='Login', command=login)
+login_btn.grid(row=4,column=1)
 
-root.mainloop()
+
+
+
+
+main_window.mainloop()
