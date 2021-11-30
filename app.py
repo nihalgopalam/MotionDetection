@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, url_for, flash, redirect
-from flask.wrappers import Request
-# from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
+from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
 # from forms import LoginForm
 import sqlite3
 
@@ -49,10 +48,12 @@ def login():
         Password = request.form['Password']
         db=sqlite3.connect('MotionDetection.db')
         initTables(db)
+
         #test
         exampleLogin_Schema = """
                         INSERT INTO login(ID, Login, Password) VALUES('1', 'nihal', 'gopalam');
                         """
+
         cur = db.cursor()
         checkPassQuery = """
                             SELECT Password FROM login
@@ -60,6 +61,7 @@ def login():
                             """
         cur.execute(checkPassQuery, UserID)
         result = cur.fetchall()
+
         #test 
         exampleLogout_Schema = """
                         DELETE FROM login WHERE Login = 'nihal';
@@ -68,7 +70,7 @@ def login():
         if(Password == result[0]):
             cur.close()
             flash("Logged In")
-            return redirect(url_for("index"))
+            return redirect(url_for("home"))
         else:
             cur.close()
             flash("Invalid")
