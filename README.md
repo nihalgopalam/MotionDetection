@@ -1,6 +1,21 @@
 # MotionDetection
 
-This is a webapp that is currently only supported locally. Built using flask, bootstrap, sqlite3, openCV, pandas, and python3
+This is a webapp that is currently only supported locally. 
+
+**Built using:** 
+
+_Lanuguages:_
+    -python3
+    -html
+    -javascript
+_Tools:_
+    -flask
+    -bootstrap
+    -sqlite3
+    -openCV
+    -pandas
+    -jQuery
+    
 
 ### To Run:
 
