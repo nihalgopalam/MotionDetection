@@ -12,6 +12,7 @@ This is a webapp that is currently only supported locally. Built using flask, bo
     - [sqlite3](https://www.sqlite.org/download.html)
     - [Flask](https://flask.palletsprojects.com/en/2.0.x/installation/)
 3. Start the flask server on local host with:
+
     Bash:
     ```
     $ export FLASK_APP=app
