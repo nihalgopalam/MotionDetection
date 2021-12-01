@@ -1,6 +1,6 @@
 import sqlite3
 
-class SQLConnection():
+class SQLConn():
     # This method returns a connection to the SQLite database
     def connectToSQL():
         connection = sqlite3.connect('MotionDetection.db')
@@ -38,13 +38,16 @@ class SQLConnection():
                             SELECT Password FROM login
                             WHERE Login = ?
                             """
-        cur.execute(checkPassQuery, enteredUsr)
+        cur.execute(checkPassQuery, (enteredUsr,))
         result = cur.fetchall()
-        if(enteredPass == result[0]):
-            cur.close()
-            return True
-        else:
-            cur.close()
+        try:
+            if(enteredPass == result[0][0]):
+                cur.close()
+                return True
+            else:
+                cur.close()
+                return False
+        except:
             return False
 
     # This method pulls the profile information 
@@ -56,6 +59,101 @@ class SQLConnection():
                         WHERE Login = ?
                         """
         cur.execute(getProfile, Login)
+        result = cur.fetchall()
+        cur.close()
+        return result
+
+    # This method creates a login entry
+    def createLogin(connection, user, passwd):
+        cur = connection.cursor()
+        makeLogin = """
+                        INSERT INTO login (Login, Password)
+                        VALUES(?, ?)
+                        """
+        cur.execute(makeLogin, (user, passwd))
+        cur.close()
+
+    # This method creates a profile entry
+    def createProfile(connection, login, name, email, pin):
+        cur = connection.cursor()
+        makeProfile = """
+                        INSERT INTO profile (Login, Name, Email, Pin)
+                        VALUES(?, ?, ?, ?);
+                        """
+        cur.execute(makeProfile, (login, name, email, pin))
+        cur.close()
+
+    # This method changes a login password
+    def changePassword(connection, login, oldPass, newPass):
+        cur = connection.cursor()
+        checkPassQuery = """
+                            SELECT Password FROM login
+                            WHERE Login = ?;
+                            """
+        cur.execute(checkPassQuery, (login,))
+        result = cur.fetchall()
+        try:
+            if(oldPass == result[0][0]):
+                changePass = """
+                                UPDATE login
+                                SET Password = ?
+                                WHERE
+                                    Login = ?;
+                                """
+                cur.execute(changePass, (login, newPass))
+                cur.close()
+                print('Changed')
+                return True
+            else:
+                cur.close()
+                print('Could not change')
+                return False
+        except:
+            return False
+
+    # This method changes a login password
+    def changePIN(connection, login, oldPIN, newPIN):
+        cur = connection.cursor()
+        checkPassQuery = """
+                            SELECT pin FROM profile
+                            WHERE Login = ?;
+                            """
+        cur.execute(checkPassQuery, (login,))
+        result = cur.fetchall()
+        if(oldPIN == result[0][0]):
+            changePIN = """
+                            UPDATE profile
+                            SET Pin = ?
+                            WHERE
+                                Login = ?;
+                            """
+            cur.execute(changePIN, (login, newPIN))
+            cur.close()
+            print('Changed')
+            return True
+        else:
+            cur.close()
+            print('Could not change')
+            return False
+
+    # This method fetches all login info
+    def getLogins(connection):
+        curr = connection.cursor()
+        getLoginEntries = """
+                            SELECT * FROM login;
+                            """
+        curr.execute(getLoginEntries)
+        result = curr.fetchall()
+        curr.close()
+        return result
+
+    # This method fetches all profiles
+    def getProfiles(connection):
+        cur = connection.cursor()
+        getProfileEntries = """
+                            SELECT * FROM profile;
+                            """
+        cur.execute(getProfileEntries)
         result = cur.fetchall()
         cur.close()
         return result
