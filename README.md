@@ -22,6 +22,7 @@ _Tools:_
 1. Create and activate a virtual enviroment in the same MotionDetection directory where you have the code downloaded
 2. Install/verify the following tools: 
     - [Python3](https://www.python.org/downloads/)
+    - [jquery](https://jquery.com/download/)
     - [Pandas](https://stackoverflow.com/questions/42907331/how-to-install-pandas-from-pip-on-windows-cmd)
     - [openCV](https://pypi.python.org/pypi/opencv-python)
     - [sqlite3](https://www.sqlite.org/download.html)
