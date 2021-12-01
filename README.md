@@ -2,20 +2,21 @@
 
 This is a webapp that is currently only supported locally. 
 
-**Built using:** 
+### Built using:
 
-_Lanuguages:_
-    -python3
-    -html
-    -javascript
-_Tools:_
-    -flask
-    -bootstrap
-    -sqlite3
-    -openCV
-    -pandas
-    -jQuery
-    
+Lanuguages:
+- python3
+- html
+- javascript
+
+Tools:
+- flask
+- bootstrap
+- sqlite3
+- openCV
+- pandas
+- jQuery
+
 
 ### To Run:
 
