@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, url_for, flash, redirect
-from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
 # from forms import LoginForm
 import sqlite3
 
