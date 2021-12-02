@@ -49,3 +49,11 @@ Tools:
     ```
 
 >Server defaults to running on port 5000
+
+# TODO:
+1. html to jquery to python
+2. python and database access and checking/adding accounts
+3. fix detection python program
+4. add a welcome page with download of detection.py
+5. send paths of the imgs to db and store imgs locally
+6. display the img and time of movement on recordings page

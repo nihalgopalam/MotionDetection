@@ -7,26 +7,80 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Register</title>
+    <script>
+        
+        $(document).ready(function(){
+            //hide warnings
+            $("small").hide();
+            $("#ConfirmAlert").hide();
 
+            //init all values from form
+            var email = $("#new_email").val();
+            var name = $("#new_name").val();
+            var user = $("#new_user").val();
+            var newPass =  $("#new_password").val();
+            var confPass = $("#confirm_new_password").val();
+            var pin =  $("#pin").val();
+            var confirm_pin = $("#confirm_pin").val();
+            
+            //displays hints
+            $("input").focus(function(){
+                $(this).next().show().fadeOut(500);
+            });
+            $("input").blur(function(){
+                $(this).next().hide().fadeOut(500);
+            });
+
+
+            $("#register").click(function(){   //on submit              
+                if(newPass != confPass || pin != confirm_pin){ //if pin/pass are not confirmed
+                    $("#ConfirmAlert").show();
+                    $("small").show();
+                }
+
+            });
+           
+            var data = [
+                {"UserID": user},
+                {"Password": pass}, 
+                {"Email": email}, 
+                {"Name": name}, 
+                {"Pin": pin}
+            ];
+
+            $.ajax({
+                type: "POST",
+                url: "/login_process",
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                dataType: 'json' 
+            });
+
+        });
+        
+    </script>
     <title>Motion Detection</title>
   </head>
-  <body>
-    <nav class="navbar navbar-expand-md navbar-light bg-light">
+  <body style="background-color: #F8F0E3;">
+    <nav class="navbar navbar-expand-md navbar-light" style="background-color: #E3EBF8;">
         <a class="navbar-brand" href="{{ url_for('index')}}">Motion Detection</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
-            <li class="nav-item active">
-                <a class="nav-link" href="login">Login</a>
-            </li>
-            <li class="nav-item active">
-              <a class="nav-link" href="code">Enter Code</a>
-            </li>
-            <li class="nav-item active">
-              <a class="nav-link" href="recordings">View Recordings</a>
-            </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="login">Sign In</a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="code">Enter Code</a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="recordings">View Recordings</a>
+              </li>
             </ul>
         </div>
     </nav>
@@ -34,7 +88,7 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-6 text-center">
-                    <h2 class="heading-section">New User</h2>
+                    <h2 class="heading-section" style="margin-top: 50px; margin-bottom: -25px;">Register User</h2>
                 </div>
             </div>
             <div class="row justify-content-center">
@@ -43,15 +97,44 @@
                           <div class="icon d-flex align-items-center justify-content-center">
                               <span class="fa fa-user-o"></span>
                           </div>
-                        <form action="User_Registration.py" class="login-form">
+                          <div id="ConfirmAlert" class="alert alert-warning alert-dismissible fade show" role="alert">
+                            Please make sure your passwords and pins match.
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                        <form method="POST" id="register_group" class="login-form">
                             <div class="form-group">
-                                <input type="text" name="" class="form-control rounded-left" placeholder="New Password" required>
-                            </div>
-                            <div class="form-group d-flex">
-                                <input type="password" name="confirm_password" class="form-control rounded-left" placeholder="Confirm Password" required>
+                                <input type="text" id="new_email" class="form-control rounded-left" placeholder="Email" pattern="^(?=@){1}$" required>
+                                <small id="emailHelp" class="form-text text-muted">Please enter a valid address with an '@' symbol</small>
                             </div>
                             <div class="form-group">
-                                <button type="submit" class="form-control btn btn-primary rounded submit px-3">Reset Password</button>
+                                <input type="text" id="new_name" class="form-control rounded-left" placeholder="First Name"  pattern="^.{2,}$"  required>
+                                <small id="userHelp"class="form-text text-muted">Minimum 2 characters</small>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" id="new_user" class="form-control rounded-left" placeholder="Username"  pattern="^.{6,}$"  required>
+                                <small id="userHelp"class="form-text text-muted">Minimum 6 characters</small>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" id="new_password" class="form-control rounded-left" placeholder="Password" pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$" required>
+                                <small id="passwordHelp" class="form-text text-muted">Must include more than 6 characters, a letter, a number, and a special character</small>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" id="confirm_new_password" class="form-control rounded-left" placeholder="Confirm Password" required>
+                                <small id="confirmPasswordHelp" class="form-text text-muted">Confirm your password</small>
+                            </div>
+                           
+                            <div class="form-group">
+                                <input type="password" name="pin" id="pin" class="form-control rounded-left" placeholder="Pin" required pattern="^[\d]{4}$">
+                                <small id="pinHelp" class="form-text text-muted">A 4-digit pin</small>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" name="pin" id="confirm_pin" class="form-control rounded-left" placeholder="Confirm Pin" required pattern="^[\d]{4}$">
+                                <small id="confirmPinHelp" class="form-text text-muted">Confirm your pin</small>
+                            </div>                            
+                            <div class="form-group">
+                                <button type="submit" id="register" class="form-control btn btn-primary rounded submit px-3">Register</button>
                             </div>
                         </form>
                     </div>
