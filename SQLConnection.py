@@ -9,24 +9,24 @@ class SQLConn():
     # This method ensures that the .db file has the necessary tables
     def initTables(connection):
         cur = connection.cursor()
-        login_schema = """
-                        CREATE TABLE IF NOT EXISTS login (
-                        ID INTEGER PRIMARY KEY,
-                        Login TEXT NOT NULL UNIQUE,
-                        Password TEXT NOT NULL);
-                        """
+        # login_schema = """
+        #                 CREATE TABLE IF NOT EXISTS userLogin (
+        #                 ID INTEGER PRIMARY KEY AUTOINCREMENT,
+        #                 Login TEXT NOT NULL UNIQUE,
+        #                 Password TEXT NOT NULL);
+        #                 """
         profile_schema = """
                         CREATE TABLE IF NOT EXISTS profile (
-                        ID INTEGER PRIMARY KEY,
+                        ID INTEGER PRIMARY KEY AUTOINCREMENT,
                         Login TEXT NOT NULL UNIQUE,
                         Name TEXT NOT NULL,
                         Email TEXT NOT NULL,
+                        Password TEXT NOT NULL,
                         Pin INTEGER);
                         """
 
-        cur.execute(login_schema)
+        # cur.execute(login_schema)
         cur.execute(profile_schema)
-        cur.close()
         return
 
     # this method checks the login information entered by 
@@ -35,116 +35,115 @@ class SQLConn():
     def checkLogin(connection, enteredUsr, enteredPass):
         cur = connection.cursor()
         checkPassQuery = """
-                            SELECT Password FROM login
+                            SELECT Name, Password FROM profile
                             WHERE Login = ?
                             """
         cur.execute(checkPassQuery, (enteredUsr,))
         result = cur.fetchall()
         try:
-            if(enteredPass == result[0][0]):
-                cur.close()
-                return True
+            if(enteredPass == result[0][1]):
+                return result
             else:
-                cur.close()
                 return False
         except:
             return False
 
+    def checkPin(connection, enteredUsr, pin):
+        cur = connection.cursor()
+        checkPassQuery = """
+                            SELECT Pin FROM profile
+                            WHERE Name = ?
+                            """
+        cur.execute(checkPassQuery, (enteredUsr,))
+        result = cur.fetchall()
+        print(result[0][0])
+        try:
+            if(int(pin) == result[0][0]):
+                return result[0][0]
+            else:
+                return False
+        except:
+            return False
+
+
     # This method pulls the profile information 
     # of a user and returns it as an array
-    def getProfile(connection, Login):
+    def getProfileLogin(connection, Login):
         cur = connection.cursor()
-        getProfile = """
+        getProfileLogin = """
                         SELECT * FROM profile
                         WHERE Login = ?
                         """
-        cur.execute(getProfile, Login)
+        cur.execute(getProfileLogin, (Login,))
         result = cur.fetchall()
-        cur.close()
         return result
 
-    # This method creates a login entry
-    def createLogin(connection, user, passwd):
+    def getProfileName(connection, name):
         cur = connection.cursor()
-        makeLogin = """
-                        INSERT INTO login (Login, Password)
-                        VALUES(?, ?)
+        getProfileName = """
+                        SELECT * FROM profile
+                        WHERE Name = ?
                         """
-        cur.execute(makeLogin, (user, passwd))
-        cur.close()
+        cur.execute(getProfileName, (name,))
+        result = cur.fetchall()
+        return result
 
     # This method creates a profile entry
-    def createProfile(connection, login, name, email, pin):
+    def createProfile(connection, login, name, email, password, pin):
         cur = connection.cursor()
         makeProfile = """
-                        INSERT INTO profile (Login, Name, Email, Pin)
-                        VALUES(?, ?, ?, ?);
+                        INSERT INTO profile (Login, Name, Email, Password, Pin)
+                        VALUES (?, ?, ?, ?, ?);
                         """
-        cur.execute(makeProfile, (login, name, email, pin))
-        cur.close()
+        cur.execute(makeProfile, (login, name, email, password, pin,))
+        connection.commit()
 
     # This method changes a login password
-    def changePassword(connection, login, oldPass, newPass):
+    def changePassword(connection, login, newPass):
         cur = connection.cursor()
         checkPassQuery = """
-                            SELECT Password FROM login
+                            SELECT Password FROM profile
                             WHERE Login = ?;
                             """
         cur.execute(checkPassQuery, (login,))
         result = cur.fetchall()
         try:
-            if(oldPass == result[0][0]):
+            if not (newPass == result[0][0]):
                 changePass = """
-                                UPDATE login
+                                UPDATE profile
                                 SET Password = ?
                                 WHERE
                                     Login = ?;
                                 """
                 cur.execute(changePass, (login, newPass))
-                cur.close()
                 print('Changed')
                 return True
             else:
-                cur.close()
                 print('Could not change')
                 return False
         except:
             return False
 
-    # This method changes a login password
-    def changePIN(connection, login, oldPIN, newPIN):
+    # This method deletes a profile
+    def delProfile(connection, name):
         cur = connection.cursor()
-        checkPassQuery = """
-                            SELECT pin FROM profile
-                            WHERE Login = ?;
-                            """
-        cur.execute(checkPassQuery, (login,))
-        result = cur.fetchall()
-        if(oldPIN == result[0][0]):
-            changePIN = """
-                            UPDATE profile
-                            SET Pin = ?
-                            WHERE
-                                Login = ?;
-                            """
-            cur.execute(changePIN, (login, newPIN))
-            cur.close()
-            print('Changed')
-            return True
-        else:
-            cur.close()
-            print('Could not change')
-            return False
+        print(name)
+        deleteProfile = '''
+                        DELETE FROM profile WHERE Name = ?;
+        '''
+        cur.execute(deleteProfile, (name,))
+        connection.commit()
+        print("deleted")
+
 
     # This method fetches all login info
     def getLogins(connection):
         curr = connection.cursor()
         getLoginEntries = """
-                            SELECT * FROM login;
+                            SELECT Login, Password FROM profile;
                             """
         curr.execute(getLoginEntries)
         result = curr.fetchall()
-        curr.close()
         return result
 
     # This method fetches all profiles
@@ -155,7 +154,6 @@ class SQLConn():
                             """
         cur.execute(getProfileEntries)
         result = cur.fetchall()
-        cur.close()
         return result
 
     # this method closes a connection to 

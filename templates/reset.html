@@ -34,22 +34,26 @@
                 if(pass != confPass){ //if pass is not confirmed
                     $("#ConfirmAlert").show();
                     $("small").show();
+                    document.location.href("/reset");
+                }
+                else{
+                    document.location.href("/login");
                 }
 
             });
            
-            var data = [
-                {"UserID": user},
-                {"Password": pass}
-            ];
+            // var data = [
+            //     {"UserID": user},
+            //     {"Password": pass}
+            // ];
 
-            $.ajax({
-                type: "POST",
-                url: "/reset_process",
-                data: JSON.stringify(data),
-                contentType: "application/json",
-                dataType: 'json' 
-            });
+            // $.ajax({
+            //     type: "POST",
+            //     url: "/reset_process",
+            //     data: JSON.stringify(data),
+            //     contentType: "application/json",
+            //     dataType: 'json' 
+            // });
 
         });
         
@@ -67,12 +71,6 @@
               <li class="nav-item active">
                 <a class="nav-link" href="login">Sign In</a>
               </li>
-              <li class="nav-item active">
-                <a class="nav-link" href="code">Enter Code</a>
-              </li>
-              <li class="nav-item active">
-                <a class="nav-link" href="recordings">View Recordings</a>
-              </li>
             </ul>
         </div>
     </nav>
@@ -80,7 +78,7 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-6 text-center">
-                    <h2 class="heading-section">Reset Password</h2>
+                    <h2 class="heading-section" style="margin-top: 50px; margin-bottom: -25px;">Reset Password</h2>
                 </div>
             </div>
             <div class="row justify-content-center">
@@ -95,7 +93,7 @@
                               <span aria-hidden="true">&times;</span>
                             </button>
                           </div>
-                        <form method="POST" class="login-form">
+                        <form class="login-form" method="post" action="/reset_process"  novalidate>
                             <div class="form-group">
                                 <input type="text" id="new_user" class="form-control rounded-left" placeholder="Username"  pattern="^.{6,}$"  required>
                                 <small id="userHelp"class="form-text text-muted">Minimum 6 characters</small>
