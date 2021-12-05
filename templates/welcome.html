@@ -11,7 +11,7 @@
     <script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <title>Welcome</title>
-    <script>
+    <!-- <script>
         
         $(document).ready(function(){
             //hide warnings
@@ -54,59 +54,71 @@
 
         });
         
-    </script>
+    </script> -->
 
     <title>Motion Detection</title>
   </head>
-  <body style="background-color: #F8F0E3;">
-    <nav class="navbar navbar-expand-md navbar-light" style="background-color: #E3EBF8;">
-        <a class="navbar-brand" href="{{ url_for('index')}}">Motion Detection</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-              <li class="nav-item active">
-                <a class="nav-link" href="login">Sign In</a>
-              </li>
-              <li class="nav-item active">
-                <a class="nav-link" href="code">Enter Code</a>
-              </li>
-              <li class="nav-item active">
-                <a class="nav-link" href="recordings">View Recordings</a>
-              </li>
-            </ul>
-        </div>
+<body style="background-color: #F8F0E3;">
+  <nav class="navbar navbar-expand-md navbar-light" style="background-color: #E3EBF8;">
+    <a class="navbar-brand" href="{{ url_for('index')}}">Motion Detection</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="nav navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="{{ url_for('login') }}">Sign In</a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav ml-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="/welcome/{{user}}">Welcome</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="/welcome/{{user}}/code">Enter Code</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="/welcome/{{user}}/recordings">Recordings</a>
+        </li>
+        <li class="ml-end nav-item active">
+          <a class="nav-link" href="/welcome/{{user}}/logout">Sign Out</a>
+        </li>
+      </ul>
+    </div>
     </nav>
     <section class="ftco-section">
       <div class="container">
         <div class="row justify-content-center">
           <div class="col page-header text-center">
             <h1 class="display-3">Welcome</h1>
-            <p class="lead"><i>'User'</i></p>
+            <p class="lead"><i>{{user}}</i></p>
           </div>
         </div>
         <div class="row justify-content-center" style="margin-top: 50px;" >
-            <div class="col text-center">
-                <form method="get" action="detection.py">
-                    <button type="submit" class="btn btn-primary rounded px-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
-                            <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                            <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+            <div class="col-md-7 col-lg-5">
+                <div class="login-wrap p-4 p-md-5">
+                    <div class="form-group">
+                        <a download href="https://github.com/nihalgopalam/MotionDetection/tree/main/detectionApp" download="detectionApp" class="form-control btn btn-primary rounded px-3 mt-2" >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                                <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
                             </svg>
-                            <strong>MotionDetection</strong>
-                    </button>
-                    <div class="text-center">
-                        <a class="btn btn-link btn-md btn-block" href="code" role="button">Start Recording</a>
-                    </div> 
+                            <strong>    MotionDetection</strong>
+                        </a>
+                    </div>
+                    <div class="form-group">
+                        <div class="text-center">
+                            <a id="record" class="form-control btn btn-primary rounded px-3 mt-2" href="/welcome/{{user}}/code" role="button">Start Recording</a>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
-        <div class="row justify-content-center" style="margin-top: 100px;">
+        <div class="row justify-content-center" style="margin-top: 50px;">
           <div class="col-md-7 col-lg-5 text-center">
             <blockquote class="blockquote text-center">
               <p class="mb-0">A webapp built using flask, bootstrap, sqlite3, openCV, pandas, and jQuery.</p>
-              <footer class="blockquote-footer">Made by <cite title="Source Title">Team7</cite></footer>
+              <footer class="blockquote-footer">Made by <cite title="Source Title">Nihal Gopalam</cite></footer>
             </blockquote>
           </div>
         </div>

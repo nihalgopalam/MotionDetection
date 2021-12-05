@@ -13,7 +13,7 @@ from SQLConnection import SQLConn
 
 back = None 
 
-vid = cv2.VideoCapture("vtest.avi")
+vid = cv2.VideoCapture("detectionApp/vtest.avi")
 
 # vid = cv2.VideoCapture(0)
 if not (vid.isOpened()):

@@ -39,25 +39,29 @@
                 if(newPass != confPass || pin != confirm_pin){ //if pin/pass are not confirmed
                     $("#ConfirmAlert").show();
                     $("small").show();
+                    document.location.href("/register");
+                }
+                else{
+                    document.location.href("/");
                 }
 
             });
            
-            var data = [
-                {"UserID": user},
-                {"Password": pass}, 
-                {"Email": email}, 
-                {"Name": name}, 
-                {"Pin": pin}
-            ];
+            // var data = [
+            //     {"UserID": user},
+            //     {"Password": pass}, 
+            //     {"Email": email}, 
+            //     {"Name": name}, 
+            //     {"Pin": pin}
+            // ];
 
-            $.ajax({
-                type: "POST",
-                url: "/login_process",
-                data: JSON.stringify(data),
-                contentType: "application/json",
-                dataType: 'json' 
-            });
+            // $.ajax({
+            //     type: "POST",
+            //     url: "/register",
+            //     data: JSON.stringify(data),
+            //     contentType: "application/json",
+            //     dataType: 'json' 
+            // });
 
         });
         
@@ -74,12 +78,6 @@
             <ul class="navbar-nav">
               <li class="nav-item active">
                 <a class="nav-link" href="login">Sign In</a>
-              </li>
-              <li class="nav-item active">
-                <a class="nav-link" href="code">Enter Code</a>
-              </li>
-              <li class="nav-item active">
-                <a class="nav-link" href="recordings">View Recordings</a>
               </li>
             </ul>
         </div>
@@ -103,21 +101,21 @@
                               <span aria-hidden="true">&times;</span>
                             </button>
                           </div>
-                        <form method="POST" id="register_group" class="login-form">
+                        <form class="login-form" method="post" action="/register_process"  novalidate >
                             <div class="form-group">
-                                <input type="text" id="new_email" class="form-control rounded-left" placeholder="Email" pattern="^(?=@){1}$" required>
+                                <input type="text" id="new_email" name="new_email" class="form-control rounded-left" placeholder="Email" pattern="^(?=@){1}$" required>
                                 <small id="emailHelp" class="form-text text-muted">Please enter a valid address with an '@' symbol</small>
                             </div>
                             <div class="form-group">
-                                <input type="text" id="new_name" class="form-control rounded-left" placeholder="First Name"  pattern="^.{2,}$"  required>
+                                <input type="text" id="new_name" name="new_name" class="form-control rounded-left" placeholder="First Name"  pattern="^.{2,}$"  required>
                                 <small id="userHelp"class="form-text text-muted">Minimum 2 characters</small>
                             </div>
                             <div class="form-group">
-                                <input type="text" id="new_user" class="form-control rounded-left" placeholder="Username"  pattern="^.{6,}$"  required>
+                                <input type="text" id="new_user" name="new_user"  class="form-control rounded-left" placeholder="Username"  pattern="^.{6,}$"  required>
                                 <small id="userHelp"class="form-text text-muted">Minimum 6 characters</small>
                             </div>
                             <div class="form-group">
-                                <input type="password" id="new_password" class="form-control rounded-left" placeholder="Password" pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$" required>
+                                <input type="password" id="new_password" name="new_password" class="form-control rounded-left" placeholder="Password" pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$" required>
                                 <small id="passwordHelp" class="form-text text-muted">Must include more than 6 characters, a letter, a number, and a special character</small>
                             </div>
                             <div class="form-group">

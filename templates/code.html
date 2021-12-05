@@ -18,9 +18,6 @@
             $("small").hide();
             $("#ConfirmAlert").hide();
 
-            
-            var pin =  $("#pin").val();
-
             //displays hints
             $("input").focus(function(){
                 $(this).next().show().fadeOut(500);
@@ -28,28 +25,6 @@
             $("input").blur(function(){
                 $(this).next().hide().fadeOut(500);
             });
-
-
-            $("#submit_pin").click(function(){   //on submit              
-                if(pin){ //if pin is not confirmed
-                    $("#ConfirmAlert").show();
-                    $("small").show();
-                }
-
-            });
-           
-            var data = [
-                {"Pin": pin}
-            ];
-
-            $.ajax({
-                type: "POST",
-                url: "/reset_process",
-                data: JSON.stringify(data),
-                contentType: "application/json",
-                dataType: 'json' 
-            });
-
         });
         
     </script>
@@ -61,21 +36,29 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
+            <ul class="nav navbar-nav">
               <li class="nav-item active">
-                <a class="nav-link" href="login">Sign In</a>
-              </li>
-              <li class="nav-item active">
-                <a class="nav-link" href="code">Enter Code</a>
-              </li>
-              <li class="nav-item active">
-                <a class="nav-link" href="recordings">View Recordings</a>
+                <a class="nav-link" href="{{ url_for('login') }}">Sign In</a>
               </li>
             </ul>
-        </div>
+            <ul class="nav navbar-nav ml-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="/welcome/{{user}}">Welcome</a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="/welcome/{{user}}/code">Enter Code</a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="/welcome/{{user}}/recordings">Recordings</a>
+              </li>
+              <li class="ml-end nav-item active">
+                <a class="nav-link" href="/welcome/{{user}}/logout">Sign Out</a>
+              </li>
+            </ul>
+          </div>
     </nav>
     <section class="ftco-section">
-      <div class="container">
+      <div class="container-fluid">
           <div class="row justify-content-center">
               <div class="col-md-6 text-center">
                   <h2 class="heading-section" style="margin-top: 50px; margin-bottom: -25px;">Enter Your Pin</h2>
@@ -83,18 +66,18 @@
           </div>
           <div class="row justify-content-center">
               <div class="col-md-7 col-lg-5">
-                  <div class="login-wrap p-4 p-md-5">
-                        <div class="icon d-flex align-items-center justify-content-center">
+                  <div class="login-wrap p-4 p-md-5 justify-content-center ">
+                        <div class="icon d-flex align-items-center">
                             <span class="fa fa-user-o"></span>
                         </div>
-                        <div id="ConfirmAlert" class="alert alert-warning alert-dismissible fade show" role="alert">
-                                The entered pin does not exist.
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                                </button>
-                        </div>
-                        <p class="text-center"><em>Use Your Pin to Start/Stop<br>the MotionDetection Program</em></p>
-                        <form method="post" class="login-form">
+                        {% if flag %}
+					    	<div class="alert alert-danger alert-dismissible fade show" role="alert">
+								Please make sure your credentials are correct							
+                            </div>
+						{% endif %}
+                        <p class="text-center"><em>Use Your Pin to Start/Stop the MotionDetection Program</em></p>
+                        <hr>
+                        <form class="login-form w-50 col-lg-6 offset-lg-3" method="post" action="/welcome/{{user}}/code_process"  novalidate >
                             <div class="form-group">
                                 <input type="password" name="pin" id="pin" class="form-control rounded-left" placeholder="Pin" required pattern="^[\d]{4}$">
                                 <small id="code_pin_help" class="form-text text-muted">Your 4-digit pin</small>
