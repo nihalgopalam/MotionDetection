@@ -1,4 +1,5 @@
 import sqlite3
+from datetime import datetime, date
 
 class SQLConn():
     # This method returns a connection to the SQLite database
@@ -40,12 +41,12 @@ class SQLConn():
                             """
         cur.execute(checkPassQuery, (enteredUsr,))
         result = cur.fetchall()
-        try:
+        if result:
             if(enteredPass == result[0][1]):
                 return result
             else:
                 return False
-        except:
+        else:
             return False
 
     def checkPin(connection, enteredUsr, pin):
@@ -107,7 +108,7 @@ class SQLConn():
                             """
         cur.execute(checkPassQuery, (login,))
         result = cur.fetchall()
-        try:
+        if result:
             if not (newPass == result[0][0]):
                 changePass = """
                                 UPDATE profile
@@ -115,13 +116,12 @@ class SQLConn():
                                 WHERE
                                     Login = ?;
                                 """
-                cur.execute(changePass, (login, newPass))
-                print('Changed')
-                return True
+                cur.execute(changePass, (newPass, login,))
+                connection.commit()
+                return "Changed"
             else:
-                print('Could not change')
-                return False
-        except:
+                return "Same Password"
+        else:
             return False
 
     # This method deletes a profile

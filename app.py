@@ -2,7 +2,6 @@ from os import remove
 from flask import Flask, render_template, request, jsonify, json, redirect
 from flask.helpers import url_for
 from SQLConnection import SQLConn
-import time
 app = Flask(__name__)
 
 @app.route("/")
@@ -11,11 +10,33 @@ def index():
 
 @app.route("/reset")
 def reset():
-    return render_template("reset.html")
+    cur = SQLConn.connectToSQL()
+    SQLConn.initTables(cur)
+    print(SQLConn.getProfiles(cur))
+    SQLConn.closeConnection(cur)
+    return render_template("reset.html", flag = False)
 
 @app.route("/reset_process", methods=["POST"])
 def reset_process():
-    return render_template("login.html")
+    cur = SQLConn.connectToSQL()
+    SQLConn.initTables(cur)
+    print(SQLConn.getProfiles(cur))
+    if  request.method == "POST":
+        username = request.form["new_user"]
+        password = request.form["new_password"]
+        print(username, password) 
+        
+    changed = SQLConn.changePassword(cur, username, password)
+    SQLConn.closeConnection(cur)
+    if changed:
+        if changed == "Same Password":
+            return render_template("reset.html", flag = "Same Password")
+        else:
+            return render_template("login.html", flag = False)
+    else:
+        return render_template("reset.html", flag = "Unable to Change")
+
+    
 
 @app.route("/register")
 def register():
@@ -47,14 +68,13 @@ def login():
 def login_process():
     cur = SQLConn.connectToSQL()
     SQLConn.initTables(cur)
-    print(SQLConn.getProfiles(cur))
     if  request.method == "POST":
         username = request.form["UserID"]
         password = request.form["Password"]
         print(username, password) 
         
     credentials = SQLConn.checkLogin(cur, username, password)
-    print(credentials)
+    print(credentials, SQLConn.getProfileLogin(cur, username))
     SQLConn.closeConnection(cur)
     if credentials:
         return redirect(url_for("welcome", UserID = credentials[0][0]))
@@ -97,9 +117,6 @@ def code_process(UserID):
 
 @app.route("/welcome/<UserID>/recordings")
 def recordings(UserID):
-    ts = time.time()
-
-    te = time.time
     cur = SQLConn.connectToSQL()
     profile = SQLConn.getProfiles(cur)
     SQLConn.closeConnection(cur)
@@ -119,6 +136,10 @@ def logout_process(UserID):
     SQLConn.delProfile(cur, UserID)
     SQLConn.closeConnection(cur)
     return render_template("logout.html", user = False)
+
+@app.route("/welcome/<UserID>/stream")
+def stream(UserID):
+    return render_template("stream.html", user = UserID)  
 
 if __name__ == "__main__":
     app.run(debug=True)
